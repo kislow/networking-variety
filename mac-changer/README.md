@@ -9,4 +9,4 @@ This repository contains two scripts that will tweak your default network interf
     - apply newly generated mac address
     - up your default network interface
 
-2. The **reset.sh** script will simply reset your mac address to its previous state. 
+2. The **reset.sh** script will simply reset your mac address to its default vendor mac address. 
