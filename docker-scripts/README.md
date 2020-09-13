@@ -1,6 +1,6 @@
 # Find and restart latest container
 
-This repository contains a single script that will simply find and restart the last triggered docker container.
+This repository contains a small script that will simply find and restart the last triggered docker container.
 
 ## License
 
