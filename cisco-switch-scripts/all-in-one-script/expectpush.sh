@@ -5,8 +5,9 @@ set hostname [lindex $argv 0]
 set username [lindex $argv 1]
 set password [lindex $argv 2]
 set enablepassword [lindex $argv 3]
+set privatekey [lindex $argv 4]
 set date [exec date +%F]
-
+set m 0
 
 # Log results
 #log_file -a /var/log/backup/backup-$date.log
@@ -40,8 +41,11 @@ send "$enablepassword\r"
 # Backup config to tftp server
 expect {
 "*#" { 
-send "show version | inc System image file\r"
-expect "System image file is*"
-send "exit\r"
+
+foreach arg $argv {
+	if { $m >= 5 } then { eval $arg }
+	incr m
+}
+
 }
 }
