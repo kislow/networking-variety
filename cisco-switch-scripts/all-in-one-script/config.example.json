@@ -1,0 +1,99 @@
+{
+	"default":{
+		"username": "ciscoadmin",
+		"sshkey": "/home/user/.ssh/id_rsa"
+	},
+	"tftp":{
+		"protocol":"tftp://",
+		"server": "mytftpserver.domain.tld",
+		"confpath": "/conf",
+		"imgpath": "/img"
+	},
+	"logging":{
+		"enable": "false",
+		"path": "./log"
+	},
+	"authentication":{
+		"publickey":{
+			"enable": "false",
+			"fallbackpassword": "false"
+		},
+		"enablepassword": "false"
+	},
+	"cmdlib":{
+		"iosSwitchversion":{
+			"descr": "Show's the current software version of ios switch.",
+			"cmds":{
+				"cmd00line": "send \"show version | inc System image file \\r\"",
+				"cmd01line": "expect \"System image file is*\"",
+				"cmd02line": "send \"exit\\r\""
+			}
+		},
+		"backupruncfg":{
+			"descr": "Backups running-config to tftp server specified in config.json.",
+                        "cmds":{
+                                "cmd00beginvar": "send \"copy running-config ",
+				"cmd01midvarparse": ".tftp.protocol",
+				"cmd02midvarparse": ".tftp.server",
+				"cmd03midvarparse": ".tftp.confpath",
+				"cmd04endvar": "\\r\"",
+				"cmd05line": "expect \"*Address or name of remote host*\"",
+				"cmd06line": "send \"\\r\"",
+				"cmd07line": "expect \"*Destination filename*\"",
+				"cmd08line": "send \"\\r\"",
+				"cmd09line": "expect \"bytes copied in\"",
+				"cmd10line": "send \"exit\\r\""
+			}
+		}
+	},
+	"switch":{
+		"catalyst":{
+			"c3560cx":{
+				"descr": "Catalyst 3560 PoE Series",
+				"ips":{
+					"z": "10.1.2.3",
+					"y": "10.1.2.4",
+					"x": "10.20.0.1"
+				}
+			},
+			"c3850":{
+				"descr": "Catalyst 3850 Core/Distribution Switch",
+				"ips":{
+					"a": "192.168.100.10",
+					"b": "192.168.100.20"
+				}
+			},
+			"c2960x":{
+				"descr": "Catalyst 2960X and XR Series Switch",
+				"ips":{
+					"a": "192.168.200.30",
+					"b": "192.168.200.40",
+					"d": "192.168.255.209"
+				}
+			},
+			"c2960l":{
+				"descr":"Catalyst 2960L Access Switch",
+				"ips":{
+					"a": "172.16.80.19"
+				}
+			}
+		},
+		"smb":{
+			"sg550":{
+				"descr":"Small Business Series 550",
+				"ips":{
+					"a": "192.168.77.10"
+				}
+			}
+		},
+		"nexus":{
+			"nx3548":{
+				"descr":"Cisco Nexus 3548 Backbone",
+				"ips":{
+					"a": "172.20.30.10",
+					"b": "172.20.40.20"
+				}
+			}
+		}
+	}
+}
