@@ -1,28 +1,28 @@
 #!/bin/bash
 
 # identify default network interface 
-defaultInterface=`route | grep '^default' | grep -o '[^ ]*$'`
+GET_DEFAULT_INTERFACE=$(route | grep '^default' | grep -o '[^ ]*$')
 
 # identify current MAC address
-currentMAC=`ip link show $defaultInterface | awk '/ether/ {print $2}'`
+GET_MAC_ADDRESS=$(ip link show $GET_DEFAULT_INTERFACE | awk '/ether/ {print $2}')
 
 # capture vendor MAC address
-vendorMAC=`ethtool -P $defaultInterface | awk '{print $3}'`
+GET_VENDOR_MAC=$(ethtool -P $GET_DEFAULT_INTERFACE | awk '{print $3}')
 
 # reset mac address if not equal to hardware specific vendor mac address
-if [[ $currentMAC == $vendorMAC ]];
+if [[ $GET_MAC_ADDRESS == $GET_VENDOR_MAC ]];
 then
     echo "MAC address has not been modified, no change will take place."
     exit 0
 else    
     # shut interface
-    shutInt=`sudo ip link set dev $defaultInterface down`
+    sudo ip link set dev $GET_DEFAULT_INTERFACE down
     # apply new MAC address
-    resetMAC=`sudo ip link set dev $defaultInterface address $vendorMAC`
+    sudo ip link set dev $GET_DEFAULT_INTERFACE address $GET_VENDOR_MAC
     # start interface
-    upInt=`sudo ip link set dev $defaultInterface up`
+    sudo ip link set dev $GET_DEFAULT_INTERFACE up
     
-    latestMAC=`sudo ip link show $defaultInterface | awk '/ether/ {print $2}'`
+    NEW_MAC_ADDRESS=$(sudo ip link show $GET_DEFAULT_INTERFACE | awk '/ether/ {print $2}')
     
-    echo "MAC addresses resetted to: $latestMAC" 
+    echo "MAC addresses resetted to: $NEW_MAC_ADDRESS" 
 fi
