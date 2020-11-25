@@ -1,36 +1,33 @@
 #!/bin/bash
 
-# identify default network interface 
-defaultInterface=`route | grep '^default' | grep -o '[^ ]*$'`
+GET_DEFAULT_INTERFACE=`route | grep '^default' | grep -o '[^ ]*$'`
 
-# get current mac address
-currentMac=`ip link show $defaultInterface | awk '/ether/ {print $2}'`
+GET_MAC_ADDRESS=`ip link show $GET_DEFAULT_INTERFACE | awk '/ether/ {print $2}'`
 
-echo "Current MAC address in use: |$currentMac|" \
+echo "Current MAC address in use: |$GET_MAC_ADDRESS|" \
 
-if [[ ! -z $currentMac ]];
+if [[ ! -z $GET_MAC_ADDRESS ]];
 then
     # generate a random mac address
-    randomMac=`sudo openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'`
-    echo "Random MAC address: |$randomMac|" \ 
+    GENERATE_RANDOM_MAC=`sudo openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'`
+    echo "Random MAC address: |$GENERATE_RANDOM_MAC|" \ 
     
-    if [[ $currentMac == $randomMac ]];
+    if [[ $GET_MAC_ADDRESS == $GENERATE_RANDOM_MAC ]];
     then
-        # if newly generated mac address is identical to the current mac address exit application
         echo "MAC address identical to new address, closing application..."
         sleep 2
         exit 0
     else
         # temporarily disable interface to avoid error message
-        shutInt=`sudo ip link set dev $defaultInterface down`
+        sudo ip link set dev $GET_DEFAULT_INTERFACE down
         # apply newly generated mac address
-        applyGeneratedMac=`sudo ip link set dev $defaultInterface address $randomMac`
+        sudo ip link set dev "$GET_DEFAULT_INTERFACE" address $GENERATE_RANDOM_MAC
         # enable interface
-        upInt=`sudo ip link set dev $defaultInterface up`
-        # print new interface mac address
-        newInterfaceMac=`ip link show $defaultInterface | awk '/ether/ {print $2}'`
-        # verify whether mac has changed
-        echo "Applying random MAC address |$newInterfaceMac| to interface ($defaultInterface)"
+        sudo ip link set dev "$GET_DEFAULT_INTERFACE" up
+
+        GET_NEW_INTERFACE_MAC=`ip link show $GET_DEFAULT_INTERFACE | awk '/ether/ {print $2}'`
+        
+        echo "Applying random MAC address |$GET_NEW_INTERFACE_MAC| to interface ($GET_DEFAULT_INTERFACE)"
     fi
 fi
 
