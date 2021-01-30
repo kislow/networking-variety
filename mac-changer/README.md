@@ -1,12 +1,19 @@
 # MAC address changer script
 
-This repository contains two scripts that will tweak your default network interface.
+This repository contains a script that will tweak your default network interface.
 
-1. The **main.sh** script will do the following:
-    - identify your default network interface (currently in use)
-    - generate a new random mac address
-    - temporarily shut your default network interface
-    - apply newly generated mac address
-    - up your default network interface
+1. Apply new mac address to your default network interface
+2. Reset network interface to vendor mac address (default mac address)
 
-2. The **reset.sh** script will simply reset your mac address to its default vendor mac address. 
+To change your mac address run the following command:
+```bash
+./mac-changer.sh apply 
+```
+or
+```bash
+./mac-changer.sh
+```
+To reset your mac address:
+```bash
+./mac-changer reset
+```
